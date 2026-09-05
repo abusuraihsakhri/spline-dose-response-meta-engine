@@ -1,7 +1,7 @@
 # Spline Dose Response Meta Engine
 
 > **Domain:** Clinical Decision Support & Biomedical Computing  
-> **Reference Guidelines & Standards:** `Standard Clinical Formulations & ISO/IEC Quality Frameworks`
+> **Reference Guidelines & Standards:** CAP / CLSI / ISO Standards
 
 <div align="center">
 
@@ -16,101 +16,202 @@
 
 ---
 
-## 📖 What It Does
+## Overview
 
-Greenland-Longnecker Dose-Response Meta-Analysis Engine
-Estimates linear and log-linear trend slopes from correlated relative risks across non-zero exposure levels.
+Greenland-Longnecker Dose-Response Meta-Analysis Engine that estimates linear and log-linear trend slopes from correlated relative risks across non-zero exposure levels. Provides enterprise-grade security with zero-PHI outbound protection and tamper-evident HMAC-SHA256 audit trails.
 
-Zero-dependency Python implementation with single and batch evaluation.
-Author: Dr. Abu Suraih Sakhri
+Author: Dr. Abu Suraih Sakhri  
 License: MIT
 
 ---
 
-## ⚙️ Key Capabilities & Algorithmic Modules
+## Features
 
-### 🔬 Analytical Functions
+### Core Analytical Engine
+- **`calculate_metrics()`**: Core domain algorithm for dose-response meta-analysis
+- **`process_single()`**: Evaluate single case with configurable parameters
+- **`process_batch()`**: Batch process CSV records with path traversal protection
 
-- **`calculate_metrics()`**: Core domain algorithm for spline-dose-response-meta-engine.
-- **`process_single()`** — calculates and validates process_single parameters.
-- **`process_batch()`** — calculates and validates process_batch parameters.
-- **`main()`** — calculates and validates main parameters.
+### Enterprise Security
+- **Zero-PHI Outbound Interceptor**: AST and regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers
+- **Tamper-Evident HMAC-SHA256 Audit Trail**: Chained, cryptographically signed logs for every evaluation
+- **Path Traversal Protection**: All file I/O operations are validated to prevent directory traversal attacks
+
+### Multi-Agent Architecture
+- **InvariantQCWorker**: Primary mathematical and protocol boundary auditor
+- **SafetyEscalationWorker**: Safety boundary and emergency interlock detection
+- **ProtocolConformanceWorker**: Spec conformance and anomaly triage
+
+### API & Observability
+- **FastAPI REST API**: OpenAPI 3.1 endpoints for task processing
+- **Prometheus Metrics**: Operational telemetry export
+- **WebSocket Telemetry**: Real-time event streaming
 
 ---
 
-## 📐 Mathematical Formulation & Logic
+## Installation
 
-```text
-  score = primary_val
-  rounded_score = round(score, 2)
-  res = calculate_metrics(**kwargs)
-  calc_res = calculate_metrics(**r)
+```bash
+# Clone the repository
+git clone https://github.com/abusuraihsakhri/spline-dose-response-meta-engine.git
+cd spline-dose-response-meta-engine
+
+# Install dependencies
+pip install fastapi uvicorn pydantic
+
+# For development (includes pytest)
+pip install -e ".[dev]"
 ```
 
 ---
 
-## 💻 CLI Quickstart & Usage
+## Usage
 
-### 1. Guided Interactive Mode
+### Command Line Interface
+
+#### Single Case Evaluation
 ```bash
-python cli.py
+python cli.py audit --task-id TASK-001 --target TARGET-01 --primary 28.5 --secondary 14.2
 ```
 
-### 2. Direct Parameterized Evaluation
+#### Batch Processing
 ```bash
-python cli.py --task-id <value> --target <value> --primary <value> --secondary <value>
+python cli.py batch -i sample.csv -o results.csv
 ```
 
-### Parameter Reference
-- `--task-id`: Specifies input measurement or parameter value.
-- `--target`: Specifies input measurement or parameter value.
-- `--primary`: Specifies input measurement or parameter value.
-- `--secondary`: Specifies input measurement or parameter value.
-- `--critical`: Specifies input measurement or parameter value.
-- `--status`: Specifies input measurement or parameter value.
-- `--input`: Specifies input measurement or parameter value.
-- `--output`: Specifies input measurement or parameter value.
+#### Interactive Chat
+```bash
+python cli.py chat "Explain the analysis parameters"
+```
 
-### Input Data Schema
+#### Verify Audit Trail
+```bash
+python cli.py verify-audit
+```
 
+#### Start API Server
+```bash
+python cli.py serve --host 127.0.0.1 --port 8000
+```
+
+### Direct Python API
+```python
+from doseresponse_meta import calculate_metrics, process_batch
+
+# Single evaluation
+result = calculate_metrics(v1=12.0, v2=4.0, v3=2.0)
+print(result)
+# {'tool': 'spline-dose-response-meta-engine', 'score': 14.0, ...}
+
+# Batch processing
+process_batch("input.csv", "output.csv")
+```
+
+### FastAPI Server
+```bash
+# Start the server
+python cli.py serve
+
+# Check health
+curl http://localhost:8000/health
+
+# Process a task
+curl -X POST http://localhost:8000/api/audit \
+  -H "Content-Type: application/json" \
+  -d '{"task_id": "T1", "target_identifier": "K1", "primary_metric": 25.0}'
+
+# Get Prometheus metrics
+curl http://localhost:8000/metrics
+```
+
+---
+
+## Input Data Schema
+
+### CSV Batch Format
 | Field | Description | Requirement |
 |:------|:------------|:------------|
-| `Patient_ID` | Parameter / observation metric | Required |
-| `v1` | Parameter / observation metric | Required |
-| `v2` | Parameter / observation metric | Required |
-| `v3` | Parameter / observation metric | Required |
+| `Patient_ID` | Patient identifier | Required |
+| `v1` | Primary parameter | Required |
+| `v2` | Secondary parameter | Required |
+| `v3` | Tertiary parameter | Required |
+
+### JSON API Payload
+```json
+{
+  "task_id": "TASK-001",
+  "target_identifier": "SPECIMEN-01",
+  "primary_metric": 28.5,
+  "secondary_metric": 14.2,
+  "status_descriptor": "NOMINAL",
+  "is_critical_flag": false
+}
+```
 
 ---
 
-## 🛡️ Security & Enterprise Architecture
+## Security Configuration
 
-* **Zero-PHI Outbound Interceptor:** Active AST and regex inspection blocking SSNs, MRNs, phone numbers, and patient identifiers.
-* **Tamper-Evident HMAC-SHA256 Audit Trail:** Chained, cryptographically signed logs for every evaluation and state transition.
-* **Air-Gapped LLM Reasoning Adapter:** Agnostic integration for local Ollama instances (`llama3`, `mistral`), Claude 3.5 Sonnet, GPT-4o, and deterministic test mocks.
-* **Active Learning Bayesian Calibration:** Dynamic tracker updating worker reliability weights and monitoring Brier calibration drift.
-* **FastAPI & Prometheus Telemetry:** Exposes OpenAPI 3.1 REST endpoints and operational Prometheus metrics (`/metrics`).
+### Audit Secret Key
+Set the `AUDIT_SECRET_KEY` environment variable for persistent audit integrity:
+```bash
+export AUDIT_SECRET_KEY=$(python -c "import secrets; print(secrets.token_hex(32))")
+```
+
+If not set, an ephemeral key will be generated (with a warning) for each session.
 
 ---
 
-## 🧪 Testing & Verification
-
-Run the automated test suite:
+## Testing
 
 ```bash
+# Run all tests
 pytest -v
-```
 
-Execute high-throughput batch simulation benchmarks:
+# Run with coverage
+pytest -v --cov=agents --cov=doseresponse_meta
 
-```bash
-python simulator.py --tasks 1000 --concurrency 8
+# Run high-throughput simulation
+python simulator.py --tasks 1000
 ```
 
 ---
 
-## 🐳 Container Deployment
+## Docker Deployment
 
 ```bash
 docker build -t spline-dose-response-meta-engine .
 docker run -p 8000:8000 spline-dose-response-meta-engine
 ```
+
+---
+
+## Project Structure
+
+```
+spline-dose-response-meta-engine/
+├── agents/                 # Multi-agent architecture
+│   ├── api.py             # FastAPI REST server
+│   ├── base.py            # Security, PHI guard, audit trail
+│   ├── learning.py        # Bayesian calibration engine
+│   ├── llm_factory.py     # LLM provider abstraction
+│   ├── metrics.py         # Prometheus metrics exporter
+│   ├── models.py          # Pydantic data models
+│   ├── streamer.py        # WebSocket telemetry
+│   ├── supervisor.py      # Master orchestrator
+│   └── workers.py         # Specialized worker agents
+├── tests/                 # Test suite
+├── web/                   # Operations console UI
+├── cli.py                 # Command line interface
+├── doseresponse_meta.py   # Core dose-response engine
+├── enrichment.py          # Feature enrichment modules
+├── simulator.py           # High-throughput simulator
+├── pyproject.toml         # Project metadata and dependencies
+└── Dockerfile             # Container configuration
+```
+
+---
+
+## License
+
+MIT License - see [LICENSE](LICENSE) for details.

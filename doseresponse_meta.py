@@ -11,8 +11,8 @@ License: MIT
 import argparse
 import csv
 import json
-import math
 import sys
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 
 
@@ -65,8 +65,23 @@ def process_single(args) -> None:
     print(json.dumps(res, indent=2))
 
 
+def _resolve_safe_path(path_str: str, must_exist: bool = False) -> Path:
+    """Resolve a path safely, preventing directory traversal outside cwd."""
+    cwd = Path.cwd().resolve()
+    p = Path(path_str).resolve()
+    try:
+        p.relative_to(cwd)
+    except ValueError:
+        raise ValueError(f"Path traversal blocked: '{path_str}' must reside within the working directory.")
+    if must_exist and not p.exists():
+        raise FileNotFoundError(f"Input file not found: {path_str}")
+    return p
+
+
 def process_batch(input_csv: str, output_csv: str) -> None:
-    with open(input_csv, mode="r", encoding="utf-8-sig") as f:
+    in_path = _resolve_safe_path(input_csv, must_exist=True)
+    out_path = _resolve_safe_path(output_csv)
+    with open(in_path, mode="r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         fieldnames = list(reader.fieldnames or [])
         rows = list(reader)
@@ -82,12 +97,12 @@ def process_batch(input_csv: str, output_csv: str) -> None:
         row_dict["clinical_recommendation"] = calc_res["clinical_recommendation"]
         out_rows.append(row_dict)
 
-    with open(output_csv, mode="w", encoding="utf-8", newline="") as f:
+    with open(out_path, mode="w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=out_fields)
         writer.writeheader()
         writer.writerows(out_rows)
 
-    print(f"Processed {len(out_rows)} records -> {output_csv}")
+    print(f"Processed {len(out_rows)} records -> {out_path}")
 
 
 def main(argv=None):

@@ -3,7 +3,7 @@ Live WebSocket Distributed Component Telemetry Streamer for spline-dose-response
 """
 import json
 import asyncio
-from typing import List, Dict, Any
+from typing import Any, List, Dict
 
 class TelemetryBroadcaster:
     """Broadcasts distributed component reasoning steps in real-time to active WebSocket clients."""

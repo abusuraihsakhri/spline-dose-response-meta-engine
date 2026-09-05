@@ -1,3 +1,4 @@
+import os
 import pytest
 from doseresponse_meta import calculate_metrics, process_batch
 
@@ -9,11 +10,13 @@ def test_doseresponse_meta_single():
     assert res["score"] > 0
 
 
-def test_doseresponse_meta_batch(tmp_path):
+def test_doseresponse_meta_batch(tmp_path, monkeypatch):
+    # Change to tmp_path so files are within the working directory
+    monkeypatch.chdir(tmp_path)
     csv_in = tmp_path / "in.csv"
     csv_out = tmp_path / "out.csv"
     csv_in.write_text("Patient,v1,v2\nPat_001,15.0,3.0\nPat_002,5.0,1.0\n", encoding="utf-8")
-    
+
     process_batch(str(csv_in), str(csv_out))
     assert csv_out.exists()
     content = csv_out.read_text(encoding="utf-8")

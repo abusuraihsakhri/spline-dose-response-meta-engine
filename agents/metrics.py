@@ -1,8 +1,6 @@
 """
 Prometheus Operational Metrics Exporter for spline-dose-response-meta-engine.
 """
-import time
-from typing import Dict, Any
 
 class SystemMetricsCollector:
     def __init__(self):
