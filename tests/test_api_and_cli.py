@@ -44,8 +44,8 @@ def test_nonfinite_task_rejected():
 def test_batch_false_is_false(tmp_path,monkeypatch):
     monkeypatch.chdir(tmp_path)
     (tmp_path/"input.csv").write_text(
-      "task_id,target_identifier,primary_metric,is_critical_flag\\n"
-      "T-1,K-1,2,False\\n",encoding="utf-8"
+      "task_id,target_identifier,primary_metric,is_critical_flag\n"
+      "T-1,K-1,2,False\n",encoding="utf-8"
     )
     assert main(["batch","-i","input.csv","-o","output.csv"]) == 0
     result=(tmp_path/"output.csv").read_text()
