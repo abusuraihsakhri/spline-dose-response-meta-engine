@@ -28,6 +28,15 @@ jobs:
         run: python -m pip check
       - name: Compile Python modules
         run: python -m compileall -q agents cli.py dose_response.py doseresponse_meta.py enrichment.py simulator.py
+      - name: Validate browser JavaScript syntax
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('web/index.html').read_text(encoding='utf-8')
+          inline = text.rsplit('<script>', 1)[1].split('</script>', 1)[0]
+          Path('/tmp/spline-browser.js').write_text(inline, encoding='utf-8')
+          PY
+          node --check /tmp/spline-browser.js
       - name: Run tests
         run: python -m pytest -v
       - name: Verify installed CLI entry point
