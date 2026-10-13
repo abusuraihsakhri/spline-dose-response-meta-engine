@@ -11,6 +11,7 @@ License: MIT
 import argparse
 import csv
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Dict, Any, List, Optional
@@ -20,16 +21,20 @@ def calculate_metrics(**kwargs) -> Dict[str, Any]:
     """
     Core domain algorithm for spline-dose-response-meta-engine.
     """
-    params = {}
-    for k, v in kwargs.items():
-        if v is not None:
+    # Legacy demonstration heuristic; identifiers and metadata are never measurements.
+    params = {k: v for k, v in kwargs.items() if v is not None}
+    numeric_vals = []
+    for key in ("v1", "v2", "v3"):
+        if key in params:
             try:
-                params[k] = float(v)
-            except (ValueError, TypeError):
-                params[k] = str(v)
+                number = float(params[key])
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"{key} must be a finite number") from exc
+            if not math.isfinite(number):
+                raise ValueError(f"{key} must be a finite number")
+            numeric_vals.append(number)
 
     # Deterministic domain logic
-    numeric_vals = [val for val in params.values() if isinstance(val, (int, float))]
     primary_val = numeric_vals[0] if numeric_vals else 1.0
 
     score = primary_val
@@ -52,8 +57,9 @@ def calculate_metrics(**kwargs) -> Dict[str, Any]:
     return {
         "tool": "spline-dose-response-meta-engine",
         "score": rounded_score,
+        "method": "legacy_demo_heuristic_not_statistically_or_clinically_validated",
         "classification": tier,
-        "clinical_recommendation": action,
+        "clinical_recommendation": "Not clinically validated. Do not use for patient management.",
         "inputs_evaluated": len(params),
     }
 
@@ -86,7 +92,9 @@ def process_batch(input_csv: str, output_csv: str) -> None:
         fieldnames = list(reader.fieldnames or [])
         rows = list(reader)
 
-    out_fields = fieldnames + ["score", "classification", "clinical_recommendation"]
+    if "v1" not in fieldnames:
+        raise ValueError("Batch input must have a v1 column")
+    out_fields = list(dict.fromkeys(fieldnames + ["score", "classification", "clinical_recommendation"]))
     out_rows = []
 
     for r in rows:
