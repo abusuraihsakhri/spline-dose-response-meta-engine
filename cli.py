@@ -10,6 +10,7 @@ from pathlib import Path
 from agents.models import SystemTaskPayload
 from agents.supervisor import SystemSupervisor
 from agents.base import AuditLogger
+from dose_response import analyze_json
 
 supervisor = SystemSupervisor(model_provider="mock")
 
@@ -25,6 +26,17 @@ def _resolve_safe_path(path_str: str, must_exist: bool = False) -> Path:
     if must_exist and not p.exists():
         raise FileNotFoundError(f"Input file not found: {path_str}")
     return p
+
+
+def _parse_bool(value: str) -> bool:
+    if isinstance(value, bool):
+        return value
+    val = str(value).strip().lower()
+    if val in {"1", "true", "yes", "y"}:
+        return True
+    if val in {"0", "false", "no", "n", ""}:
+        return False
+    raise ValueError(f"Invalid boolean value: {value!r}")
 
 
 def main(argv=None):
@@ -48,6 +60,11 @@ def main(argv=None):
     p_batch = subparsers.add_parser("batch", help="Batch process CSV records")
     p_batch.add_argument("-i", "--input", required=True)
     p_batch.add_argument("-o", "--output", default="results.csv")
+
+    # Covariance-aware linear dose-response analysis
+    p_gls = subparsers.add_parser("dose-response", help="Fit two-stage linear GLS from JSON")
+    p_gls.add_argument("-i", "--input", required=True, help="Input JSON containing studies and covariance")
+    p_gls.add_argument("-o", "--output", help="Save results JSON; print to stdout if omitted")
 
     # Verify Audit
     subparsers.add_parser("verify-audit", help="Verify HMAC audit trail integrity")
@@ -94,6 +111,17 @@ def main(argv=None):
         print(f"Audit Trail Blocks: {len(trail)} | Cryptographic Integrity Verified: {valid}")
         return 0
 
+    if args.command == "dose-response":
+        in_path = _resolve_safe_path(args.input, must_exist=True)
+        output = analyze_json(in_path.read_text(encoding="utf-8"))
+        if args.output:
+            out_path = _resolve_safe_path(args.output)
+            out_path.write_text(json.dumps(json.loads(output), indent=2) + "\n", encoding="utf-8")
+            print(f"Saved analysis -> {out_path}")
+        else:
+            print(json.dumps(json.loads(output), indent=2))
+        return 0
+
     if args.command == "batch":
         in_path = _resolve_safe_path(args.input, must_exist=True)
         out_path = _resolve_safe_path(args.output)
@@ -102,16 +130,19 @@ def main(argv=None):
             fieldnames = list(reader.fieldnames or [])
             rows = list(reader)
 
-        out_fields = fieldnames + ["overall_urgency", "integrity_status", "total_alerts", "audit_hash"]
+        required = {"task_id", "target_identifier", "primary_metric"}
+        if not required.issubset(fieldnames):
+            raise ValueError(f"Batch CSV must include: {', '.join(sorted(required))}")
+        out_fields = list(dict.fromkeys(fieldnames + ["overall_urgency", "integrity_status", "total_alerts", "audit_hash"]))
         out_rows = []
         for r in rows:
             payload = SystemTaskPayload(
-                task_id=r.get("task_id", "TASK-01"),
-                target_identifier=r.get("target_identifier", "TARGET-01"),
-                primary_metric=float(r.get("primary_metric", 15.0)),
+                task_id=r["task_id"],
+                target_identifier=r["target_identifier"],
+                primary_metric=float(r["primary_metric"]),
                 secondary_metric=float(r.get("secondary_metric", 5.0)),
                 status_descriptor=r.get("status_descriptor", "NOMINAL"),
-                is_critical_flag=bool(r.get("is_critical_flag", False)),
+                is_critical_flag=_parse_bool(r.get("is_critical_flag", "false")),
             )
             dossier = supervisor.process_task(payload)
             row_dict = dict(r)

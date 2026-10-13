@@ -1,6 +1,6 @@
 """
 Enrichment Feature Implementation for spline-dose-response-meta-engine.
-Generated based on domain-specific requirements in specifications.
+Placeholder enrichment scaffolding only. None of these classes implement the named statistical models.
 """
 from dataclasses import dataclass, field
 from typing import Dict, Any, List, Optional, Tuple
@@ -39,19 +39,19 @@ class CurrentStateEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Current State: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Current State: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = CurrentStateEngineResult(
             feature_name="Current State",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -89,19 +89,19 @@ class EnrichmentRoadmapEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Enrichment Roadmap: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Enrichment Roadmap: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = EnrichmentRoadmapEngineResult(
             feature_name="Enrichment Roadmap",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -139,19 +139,19 @@ class RestrictedCubicSplinesRcsDoseresponseEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Restricted Cubic Splines (RCS) Dose-Response: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Restricted Cubic Splines (RCS) Dose-Response: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = RestrictedCubicSplinesRcsDoseresponseEngineResult(
             feature_name="Restricted Cubic Splines (RCS) Dose-Response",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -189,19 +189,19 @@ class TwostageAndOnestagePoolingEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Two-Stage and One-Stage Pooling: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Two-Stage and One-Stage Pooling: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = TwostageAndOnestagePoolingEngineResult(
             feature_name="Two-Stage and One-Stage Pooling",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -239,19 +239,19 @@ class DoseresponseShapeClassificationEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Dose-Response Shape Classification: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Dose-Response Shape Classification: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = DoseresponseShapeClassificationEngineResult(
             feature_name="Dose-Response Shape Classification",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -289,19 +289,19 @@ class BenchmarkDoseBmdEstimationEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Benchmark Dose (BMD) Estimation: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Benchmark Dose (BMD) Estimation: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = BenchmarkDoseBmdEstimationEngineResult(
             feature_name="Benchmark Dose (BMD) Estimation",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -339,19 +339,19 @@ class PublicationBiasForDoseresponseEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Publication Bias for Dose-Response: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Publication Bias for Dose-Response: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = PublicationBiasForDoseresponseEngineResult(
             feature_name="Publication Bias for Dose-Response",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
@@ -389,19 +389,19 @@ class SensitivityAnalysisDashboardEngine:
         if primary_value > self.threshold * 2:
             status = "CRITICAL_ALERT"
             alerts.append(f"Sensitivity Analysis Dashboard: Primary value {primary_value:.2f} breached critical threshold ({self.threshold * 2:.2f})")
-            recs.append("Initiate immediate protocol review and escalate to attending lead.")
+            recs.append("Placeholder calculation only; no validated analysis or clinical interpretation.")
         elif primary_value > self.threshold:
             status = "WARNING"
             alerts.append(f"Sensitivity Analysis Dashboard: Value {primary_value:.2f} exceeds baseline threshold ({self.threshold:.2f})")
-            recs.append("Increase monitoring frequency and perform secondary verification.")
+            recs.append("Placeholder calculation only; review source data and methods before interpretation.")
         else:
-            recs.append("Parameters nominal under standard operating bounds.")
+            recs.append("Placeholder only; named statistical feature has not been implemented.")
 
         res = SensitivityAnalysisDashboardEngineResult(
             feature_name="Sensitivity Analysis Dashboard",
             status=status,
             score=score,
-            metrics={"primary": primary_value, "secondary": secondary_value, **kwargs},
+            metrics={"implementation": "placeholder_not_validated", "primary": primary_value, "secondary": secondary_value, **kwargs},
             alerts=alerts,
             recommendations=recs
         )
